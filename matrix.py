@@ -106,10 +106,7 @@ class Matrix(object):
         """
         if not self.is_square():
             raise ValueError("Cannot calculate the trace of a non-square matrix.")
-        trace_g = 0    
-        for i in range(self.h):
-            trace_g += self.g[i][i]
-        return trace_g
+        return sum([self.g[i][i] for i in range(self.h)])
 
     def inverse(self):
         """Calculates the inverse of a 1x1 or 2x2 Matrix.
@@ -137,16 +134,9 @@ class Matrix(object):
         det_g = self.determinant()
         if det_g == 0:
                 raise ValueError("Determinant of the given matrix is 0. Non-inverse matrix.")
-        inv_g = zeroes(self.h, self.w)        
         if self.h == 1:
-            inv_g[0][0] = 1 / det_g
-        else:
-            inv_g[0][0], inv_g[1][1] = self.g[1][1], self.g[0][0]
-            inv_g[0][1], inv_g[1][0] = -self.g[0][1], -self.g[1][0]
-            for i in range(self.h):
-                for j in range(self.w):
-                    inv_g[i][j] = inv_g[i][j] / det_g
-        return inv_g    
+            return Matrix([[1 / det_g]])
+        return 1.0 / det_g * (self.trace() * identity(self.w) - self)   
         
     def T(self):
         """Transposes the given matrix.
